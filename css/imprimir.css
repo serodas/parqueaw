@@ -1,0 +1,30 @@
+/* 
+    Document   : imprimir
+    Created on : 8/08/2014, 11:45:34 AM
+    Author     : CirSisLho
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+
+#cabecera, #menu, #lateral, #comentarios {
+  display: none !important;
+}
+
+body, p, #contenido, #principal, #pie {
+  float: none !important;
+  width: auto !important;
+  margin:  -20px !important;
+  padding: 0 !important;
+}
+
+body { color: #000; font: 100%/150% Georgia, "Times New Roman", Times, serif; }
+
+a:after {
+  content: " (" attr(href) ") ";
+}
+
+a:before {
+  content: " (" attr(href) ") ";
+}
