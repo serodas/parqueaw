@@ -1,40 +1,33 @@
 version: "3"
 
 services:
-  nginx:
-    build:
-      context: .
-      dockerfile: docker/nginx/Dockerfile
-    ports:
-      - "8001:80"
-      - "443:443"
-    expose:
-      - "9004"      
-    networks:
-      - comfamiliar
-    volumes:
-      - project:/var/www/project/
-    depends_on: 
-      - php      
-
   php:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
     volumes:
-      - project:/var/www/project/
+      - .:/var/www/project/
+    ports:
+      - "80:80"      
+      - 9222:9222
     expose:
-      - "9004"
+      - "9001"
     networks:
-      - comfamiliar
+      - symfony
 
 networks:
-  comfamiliar:
+  symfony:
 
 volumes:
-  project:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: .
+  # project:
+    # driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: .
+  mysql-db-data:
+    # driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /home/srodas/Docker/volumes/mysql

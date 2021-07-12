@@ -1,7 +1,11 @@
-FROM php:7.4-fpm
+FROM php:5.6-apache
+
+RUN apt-get update && apt-get install -y
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         acl \
+        rsync \
+        openssh-server \
         libcurl4-openssl-dev \
         procps \
         zip \
@@ -28,10 +32,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         mysqli \
         pdo \
         pdo_odbc \
+        pdo_mysql \
         xml \
         curl \
         mbstring \
-        opcache \
+        mcrypt  \
         ldap
 
 RUN docker-php-source extract \
@@ -45,15 +50,19 @@ RUN docker-php-source extract \
     && docker-php-source delete \
     && php -m
 
-RUN pecl install xdebug-3.0.2 \
+RUN pecl install xdebug-2.5.5 \
     && rm -rf /tmp/pear \
-    && docker-php-ext-enable xdebug    
+    && docker-php-ext-enable xdebug
 
 COPY ./docker/odbc/ibm-iaccess-1.1.0.12-1.0.amd64.deb /tmp/
 RUN dpkg -i /tmp/ibm-iaccess-1.1.0.12-1.0.amd64.deb
 RUN rm /tmp/ibm-iaccess-1.1.0.12-1.0.amd64.deb
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.0.0
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.0.0    
+COPY ./docker/apache/site.conf /etc/apache2/sites-available/site.conf
 COPY ./docker/xdebug/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
-COPY ./docker/opcache/opcache.ini $PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini
 COPY ./docker/odbc/odbc.ini /etc/odbc.ini
+COPY . /var/www/project/
+RUN a2enmod rewrite
+RUN a2ensite site.conf
+RUN service apache2 restart
 WORKDIR /var/www/project
