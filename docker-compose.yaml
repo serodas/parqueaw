@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "8001:80"
+      - "443:443"
+    expose:
+      - "9004"      
+    networks:
+      - comfamiliar
+    volumes:
+      - project:/var/www/project/
+    depends_on: 
+      - php      
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - project:/var/www/project/
+    expose:
+      - "9004"
+    networks:
+      - comfamiliar
+
+networks:
+  comfamiliar:
+
+volumes:
+  project:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: .
