@@ -56,7 +56,7 @@ if ( isset ( $_POST['informe'] ) ) {
     
 <?php
     $sql = " select p.nombre as parquea, m.placa, ifnull(v.nombre, ''), tu.nombre as tipusu, tv.nombre as tipveh, 
-            ev.nombre as estveh, m.fecing,m.horing, m.fecsal,m.horsal
+            ev.nombre as estveh, m.fecing,m.horing, m.fecsal,m.horsal,m.fecfac,m.horfac
         from parqueadero p
             inner join parqueaw.parusu pu on p.id = pu.parqueadero and pu.login = '$login' and pu.estado = 'A' 
             inner join movimiento m on p.id = m.parqueadero
@@ -66,6 +66,6 @@ if ( isset ( $_POST['informe'] ) ) {
             left join vehiculos v on m.placa = v.placa
         where m.fecing between $ini and $fin ";
     $_SESSION['sentencia'] = $sql;
-    $encabezados = "Parqueadero,Placa,Persona,Tipo usuario,Tipo de vehiculo,Estado del vehiculo,Ingreso,HoraIngreso,Salida,HoraSalida";
+    $encabezados = "Parqueadero,Placa,Persona,TipoUsuario,TipoVehiculo,EstadoVehiculo,Ingreso,HoraIngreso,Salida,HoraSalida,FechaFactura,HoraFactura";
     $parqueo->tabla($sql, $encabezados, '', 'registros');
 ?>
